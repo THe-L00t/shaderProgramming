@@ -33,6 +33,7 @@ private:
 	GLuint m_VBORect = 0;
 	GLuint m_SolidRectShader = 0;
 
-	GLuint m_VBOtest;
+	GLuint m_VBOtestPos = 0;
+	GLuint m_VBOtestColor = 0;
 };
 
