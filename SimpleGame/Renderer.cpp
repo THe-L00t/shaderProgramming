@@ -49,13 +49,13 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
 	// lecture2 
-	float temp = 0.5f;
+	float temp = 0.0f;
 	float size = 1.f;
 	float testPos[]
 		=
 	{
-		(0.f - temp)*size,(0.f - temp)* size, 0.f,
-		(1.f-temp)*size, (0.f - temp)* size, 0.f,
+		(0.f - temp)* size, (0.f - temp)* size, 0.f,
+		(1.f - temp)* size, (0.f - temp)* size, 0.f,
 		(1.f - temp)* size, (1.f - temp)* size, 0.f,	//Triangle1
 		(0.f - temp)* size, (0.f - temp)* size, 0.f,
 		(1.f - temp)* size, (1.f - temp)* size, 0.f,

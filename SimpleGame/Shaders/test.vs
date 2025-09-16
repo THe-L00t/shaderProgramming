@@ -9,7 +9,7 @@ void main()
 {
 	//vec4 newPosition = vec4(a_Position.x-0.5,a_Position.y-0.5,a_Position.z,1);
 	vec4 newPosition = vec4(a_Position,1);
-	//newPosition.xy = newPosition.xy - vec2(0.5);
+	newPosition.xy = newPosition.xy + vec2(0,-0.7);
 	gl_Position = newPosition;
 
 	v_Color = a_Color;
