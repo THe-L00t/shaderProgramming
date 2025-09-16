@@ -19,7 +19,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	
+	m_TestShader = CompileShaders("./Shaders/Test.vs", "./Shaders/Test.fs");
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -48,12 +49,17 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
 	// lecture2 
+	float temp = 0.5f;
+	float size = 1.f;
 	float testPos[]
 		=
 	{
-		0.f, 0.f, 0.f, 
-		1.f, 0.f, 0.f, 
-		1.f, 1.f, 0.f, //Triangle1
+		(0.f - temp)*size,(0.f - temp)* size, 0.f,
+		(1.f-temp)*size, (0.f - temp)* size, 0.f,
+		(1.f - temp)* size, (1.f - temp)* size, 0.f,	//Triangle1
+		(0.f - temp)* size, (0.f - temp)* size, 0.f,
+		(1.f - temp)* size, (1.f - temp)* size, 0.f,
+		(0.f - temp)* size, (1.f - temp)* size, 0.f,	//Triangle2
 	};
 
 	glGenBuffers(1, &m_VBOtestPos);
@@ -65,7 +71,10 @@ void Renderer::CreateVertexBufferObjects()
 	{
 		1.f, 0.f, 0.f, 1.f,
 		0.f, 1.f, 0.f, 1.f,
-		0.f, 0.f, 1.f, 1.f//Triangle1
+		0.f, 0.f, 1.f, 1.f,//Triangle1
+		1.f, 0.f, 0.f, 1.f,
+		0.f, 1.f, 0.f, 1.f,
+		0.f, 0.f, 1.f, 1.f	//Triangle2
 	};
 
 	glGenBuffers(1, &m_VBOtestColor);
@@ -223,14 +232,7 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 void Renderer::DrawTest() {
 
 	//Program select
-	glUseProgram(m_SolidRectShader);
-
-	glUniform4f(glGetUniformLocation(m_SolidRectShader,
-		"u_Trans"), 
-		0, 0, 0, 1);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader,
-		"u_Color"),
-		1, 1, 1, 1);
+	glUseProgram(m_TestShader);
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
@@ -242,7 +244,7 @@ void Renderer::DrawTest() {
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOtestColor);
 	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(attribPosition);
 

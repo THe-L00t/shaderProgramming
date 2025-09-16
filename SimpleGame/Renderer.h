@@ -35,5 +35,6 @@ private:
 
 	GLuint m_VBOtestPos = 0;
 	GLuint m_VBOtestColor = 0;
+	GLuint m_TestShader = 0;
 };
 
