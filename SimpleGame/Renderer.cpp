@@ -50,7 +50,7 @@ void Renderer::CreateVertexBufferObjects()
 
 	// lecture2 
 	float temp = 0.0f;
-	float size = 1.f;
+	float size = 0.3f;
 	float testPos[]
 		=
 	{
@@ -231,8 +231,13 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 
 void Renderer::DrawTest() {
 
+	m_time += 0.016;
+
 	//Program select
 	glUseProgram(m_TestShader);
+
+	int uTimeLoc = glGetUniformLocation(m_TestShader, "u_Time");
+	glUniform1f(uTimeLoc, m_time);
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);

@@ -5,12 +5,20 @@ in vec4 a_Color;
 
 out vec4 v_Color;
 
+uniform float u_Time;
+
+const float PI = 3.141592;
+
 void main()
 {
-	//vec4 newPosition = vec4(a_Position.x-0.5,a_Position.y-0.5,a_Position.z,1);
-	vec4 newPosition = vec4(a_Position,1);
-	newPosition.xy = newPosition.xy + vec2(0,-0.7);
+	vec4 newPosition = vec4(a_Position.x-0.5,a_Position.y-0.5,a_Position.z,1);
+	//vec4 newPosition = vec4(a_Position,1);
+	
+	float jinja = -1 + 2*fract(u_Time);
+	float y = (jinja+1)*PI;
+	newPosition.xy = newPosition.xy + vec2(u_Time*cos(y),u_Time*sin(y));
 	gl_Position = newPosition;
 
 	v_Color = a_Color;
 }
+ 
