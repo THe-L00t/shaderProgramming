@@ -327,12 +327,13 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = a; index++;
 	}
 
-	glGenBuffers(1, &m_ParticleShader);
-	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleShader);
+	glGenBuffers(1, &m_VBOPraticle);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	delete[] vertices;
 
+	m_VBOPraticleVertexCount = totalFloatCount;
 
 }
 
@@ -358,13 +359,48 @@ void Renderer::DrawTest() {
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOtestPos);
 	glVertexAttribPointer(attribRadius, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (GLvoid*)(sizeof(float)*3));
 
-	GeneralParticles(2);
 	
 	glEnableVertexAttribArray(attribColor);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOtestColor);
-	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (GLvoid*)(sizeof(float) * 4));
 
 	glDrawArrays(GL_TRIANGLES, 0, 12);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::DrawParticle()
+{
+
+	m_time += 0.016;
+
+	//Program select
+	GLuint shader = m_ParticleShader;
+	glUseProgram(shader);
+
+	int uTimeLoc = glGetUniformLocation(m_TestShader, "u_Time");
+	glUniform1f(uTimeLoc, m_time);
+
+	int attribPosition = glGetAttribLocation(m_TestShader, "a_Position");
+	int attribRadius = glGetAttribLocation(m_TestShader, "a_Radius");
+	int attribColor = glGetAttribLocation(m_TestShader, "a_Color");
+
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+
+	glEnableVertexAttribArray(attribRadius);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
+	glVertexAttribPointer(attribRadius, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (GLvoid*)(sizeof(float) * 3));
+
+
+	glEnableVertexAttribArray(attribColor);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, m_VBOPraticleVertexCount);
 
 	glDisableVertexAttribArray(attribPosition);
 
