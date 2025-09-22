@@ -24,6 +24,7 @@ private:
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
+	void GeneralParticles(int numParticle);
 
 	bool m_Initialized = false;
 	
@@ -39,5 +40,8 @@ private:
 
 	//Time
 	float m_time = 0;
+
+	//Particle
+	GLuint m_ParticleShader = 0;
 };
 
