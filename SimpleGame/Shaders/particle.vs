@@ -5,7 +5,7 @@ in float a_Radius;
 in vec4 a_Color;
 in float a_sTime;
 in vec3 a_Vel;
-in float a_LifeTime
+in float a_LifeTime;
 
 out vec4 v_Color;
 

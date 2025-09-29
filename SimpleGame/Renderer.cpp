@@ -266,8 +266,8 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 
 void Renderer::GeneralParticles(int numParticle)
 {
-	int floatCountPerVertex = 3 + 1 + 4 + 1 + 3;	
-	//x, y, z, value, r, g, b, a, sTime, vx, vy, vz
+	int floatCountPerVertex = 3 + 1 + 4 + 1 + 3 + 1;	
+	//x, y, z, value, r, g, b, a, sTime, vx, vy, vz, l
 	int verticesCountPerParticle = 6;
 	int floatCountPerParticle = floatCountPerVertex * verticesCountPerParticle;
 
@@ -291,6 +291,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vx = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		vy = ((float)rand() / (float)RAND_MAX) * 2.f + 2.5f; //- 1.f;
 		vz = 0.f;
+		float l;
+		l = ((float)rand() / (float)RAND_MAX) * 2.f;
 
 		float size;
 		size = ((float)rand() / (float)RAND_MAX) * 0.01f ;
@@ -310,6 +312,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = vx; index++;
 		vertices[index] = vy; index++;
 		vertices[index] = vz; index++;
+		vertices[index] = l; index++;
 
 		vertices[index] = x + size; index++;	//v2
 		vertices[index] = y + size; index++;
@@ -323,6 +326,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = vx; index++;
 		vertices[index] = vy; index++;
 		vertices[index] = vz; index++;
+		vertices[index] = l; index++;
 
 		vertices[index] = x - size; index++;	//v3
 		vertices[index] = y + size; index++;
@@ -336,6 +340,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = vx; index++;
 		vertices[index] = vy; index++;
 		vertices[index] = vz; index++;
+		vertices[index] = l; index++;
 
 		vertices[index] = x - size; index++;	//v4
 		vertices[index] = y - size; index++;
@@ -349,6 +354,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = vx; index++;
 		vertices[index] = vy; index++;
 		vertices[index] = vz; index++;
+		vertices[index] = l; index++;
 
 		vertices[index] = x + size; index++;	//v5
 		vertices[index] = y - size; index++;
@@ -362,6 +368,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = vx; index++;
 		vertices[index] = vy; index++;
 		vertices[index] = vz; index++;
+		vertices[index] = l; index++;
 
 		vertices[index] = x + size; index++;	//v6
 		vertices[index] = y + size; index++;
@@ -375,6 +382,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = vx; index++;
 		vertices[index] = vy; index++;
 		vertices[index] = vz; index++;
+		vertices[index] = l; index++;
 	}
 
 	glGenBuffers(1, &m_VBOPraticle);
@@ -442,27 +450,32 @@ void Renderer::DrawParticle()
 	int attribColor = glGetAttribLocation(shader, "a_Color");
 	int attribTime = glGetAttribLocation(shader, "a_sTime");
 	int attribVel = glGetAttribLocation(shader, "a_Vel");
+	int attribLife = glGetAttribLocation(shader, "a_LifeTime");
 
 	glEnableVertexAttribArray(attribPosition);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 12, 0);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 13, 0);
 
 	glEnableVertexAttribArray(attribRadius);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
-	glVertexAttribPointer(attribRadius, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(sizeof(float) * 3));
+	glVertexAttribPointer(attribRadius, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 13, (GLvoid*)(sizeof(float) * 3));
 
 
 	glEnableVertexAttribArray(attribColor);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
-	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(sizeof(float) * 4));
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 13, (GLvoid*)(sizeof(float) * 4));
 
 	glEnableVertexAttribArray(attribTime);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
-	glVertexAttribPointer(attribTime, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(sizeof(float) * 8));
+	glVertexAttribPointer(attribTime, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 13, (GLvoid*)(sizeof(float) * 8));
 
 	glEnableVertexAttribArray(attribVel);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
-	glVertexAttribPointer(attribVel, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(sizeof(float) * 9));
+	glVertexAttribPointer(attribVel, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 13, (GLvoid*)(sizeof(float) * 9));
+
+	glEnableVertexAttribArray(attribLife);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
+	glVertexAttribPointer(attribLife, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 13, (GLvoid*)(sizeof(float) * 10));
 
 	glDrawArrays(GL_TRIANGLES, 0, m_VBOPraticleVertexCount);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
