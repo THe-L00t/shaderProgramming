@@ -6,17 +6,18 @@ in vec4 a_Color;
 in float a_sTime;
 in vec3 a_Vel;
 in float a_LifeTime;
+in float a_Mass;
 
 out vec4 v_Color;
 
 uniform float u_Time;
+uniform vec3 u_Force;
 
 const float PI = 3.141592;
 const vec2 c_G = vec2(0,9.8);
 
 void main()
 {
-	float lifeTime = 1.0;
 	float newAlpha = 1.0;
 
 	vec4 newPosition = vec4(a_Position.x,a_Position.y,a_Position.z,1);
@@ -25,8 +26,14 @@ void main()
 	if(newTime > 0){
 		float t = fract(newTime/a_LifeTime) * a_LifeTime ;
 		float tt = t*t;
-		float x = a_Vel.x*t - 0.5*c_G.x*tt;		//a_Radius*cos(0)
-		float y = a_Vel.y * t -0.5*c_G.y*tt ; //a_Radius*sin(0)
+		float forceX = u_Force.x + c_G.x*a_Mass;
+		float forceY = u_Force.y + c_G.y*a_Mass;
+
+		float aX = forceX/ a_Mass;
+		float aY = forceY/a_Mass;
+
+		float x = a_Vel.x*t - 0.5*aX*tt;		//a_Radius*cos(0)
+		float y = a_Vel.y * t -0.5*aY*tt; //a_Radius*sin(0)
 
 		
 		newPosition.xy += vec2(x,y);
