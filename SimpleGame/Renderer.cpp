@@ -289,7 +289,7 @@ void Renderer::GeneralParticles(int numParticle)
 		a = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		float vx, vy, vz;
 		vx = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		vy = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		vy = ((float)rand() / (float)RAND_MAX) * 2.f + 2.5f; //- 1.f;
 		vz = 0.f;
 
 		float size;
@@ -426,6 +426,8 @@ void Renderer::DrawTest() {
 void Renderer::DrawParticle()
 {
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_SRC1_ALPHA);
 	m_time += 0.016;
 
 	//Program select
@@ -462,9 +464,12 @@ void Renderer::DrawParticle()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
 	glVertexAttribPointer(attribVel, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 12, (GLvoid*)(sizeof(float) * 9));
 
-	glDrawArrays(GL_TRIANGLES, 0, m_VBOPraticleVertexCount-6*900);
+	glDrawArrays(GL_TRIANGLES, 0, m_VBOPraticleVertexCount);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(attribPosition);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDisable(GL_BLEND);
 }
