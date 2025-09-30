@@ -22,7 +22,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Create VBOs
 	CreateVertexBufferObjects();
 
-	GeneralParticles(1'000);
+	GeneralParticles(10'000);
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -279,8 +279,8 @@ void Renderer::GeneralParticles(int numParticle)
 	for (size_t i = 0; i < numParticle; i++)
 	{
 		float x, y, z, value, r, g, b, a;
-		x = 0;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		y = 0;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		x = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		y = 1;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		z = 0.f;
 		value = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		r = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
@@ -292,7 +292,7 @@ void Renderer::GeneralParticles(int numParticle)
 		vy = ((float)rand() / (float)RAND_MAX) * 2.f + 2.5f; //- 1.f;
 		vz = 0.f;
 		float l;
-		l = ((float)rand() / (float)RAND_MAX) * 2.f;
+		l = ((float)rand() / (float)RAND_MAX) * 2.f +1.f;
 		float mass = ((float)rand() / (float)RAND_MAX) * 2.f + 1.f;
 
 		float size;
@@ -483,10 +483,10 @@ void Renderer::DrawParticle()
 	glVertexAttribPointer(attribVel, 3, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 9));
 
 	glEnableVertexAttribArray(attribLife);
-	glVertexAttribPointer(attribLife, 1, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 10));
+	glVertexAttribPointer(attribLife, 1, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 12));
 
 	glEnableVertexAttribArray(attribMass);
-	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 11));
+	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 13));
 
 	glDrawArrays(GL_TRIANGLES, 0, m_VBOPraticleVertexCount);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
