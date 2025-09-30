@@ -16,8 +16,7 @@ uniform vec3 u_Force;
 const float PI = 3.141592;
 const vec2 c_G = vec2(0,9.8);
 
-void main()
-{
+void raining(){
 	float newAlpha = 1.0;
 
 	vec4 newPosition = vec4(a_Position.x,a_Position.y,a_Position.z,1);
@@ -46,5 +45,33 @@ void main()
 
 	gl_Position = newPosition;
 	v_Color = vec4(a_Color.rgb,newAlpha);
+}
+
+void sinParticle(){
+	
+	vec4 newPosition = vec4(a_Position.x,a_Position.y,a_Position.z,1);
+	float newTime = u_Time - a_sTime;
+	float t = fract(newTime);
+	float cycle = 2*t * PI;
+	if(newTime > 0){
+		
+
+		newPosition.x += 2*t-1;
+		newPosition.y += sin(cycle)*a_Mass;
+	}
+	else{
+		newPosition.xy = vec2(-100000,0);
+	}
+	
+
+
+	gl_Position = newPosition;
+	v_Color = vec4(a_Color.rgb,1);
+}
+
+void main()
+{
+	//raining();
+	sinParticle();
 }
  

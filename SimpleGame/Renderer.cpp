@@ -280,7 +280,7 @@ void Renderer::GeneralParticles(int numParticle)
 	{
 		float x, y, z, value, r, g, b, a;
 		x = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
-		y = 1;// ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
+		y = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		z = 0.f;
 		value = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
 		r = ((float)rand() / (float)RAND_MAX) * 2.f - 1.f;
@@ -452,7 +452,7 @@ void Renderer::DrawParticle()
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
 	int uForceLoc = glGetUniformLocation(shader, "u_Force");
-	glUniform3f(uForceLoc, 1,0,0);
+	glUniform3f(uForceLoc, 3,0,0);
 
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
