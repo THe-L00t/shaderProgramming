@@ -50,6 +50,11 @@ void raining(){
 
 void sinParticle(){
 	
+	vec4 centerC = vec4(1,0,0,1);
+	vec4 borderC = vec4(1,1,1,1);
+	
+	vec4 newColor= a_Color;
+
 	vec4 newPosition = vec4(a_Position.x,a_Position.y,a_Position.z,1);
 	float newTime = u_Time - a_sTime;
 	float t = fract(newTime);
@@ -65,6 +70,8 @@ void sinParticle(){
 		
 
 		newAlpha = 1 - t/a_LifeTime;
+		newColor = mix(centerC, borderC,abs(sin(cycle)* a_Value* sin(t)*5));
+
 	}
 	else{
 		newPosition.xy = vec2(-100000,0);
@@ -73,13 +80,53 @@ void sinParticle(){
 
 
 	gl_Position = newPosition;
-	if(newPosition.y < 0.1/t && newPosition.y >-0.1/t) v_Color = vec4(a_Color.r+0.5,a_Color.g,a_Color.b,newAlpha);
-	else v_Color = vec4(a_Color.rgb,newAlpha);
+	//if(newPosition.y < 0.1/t && newPosition.y >-0.1/t) v_Color = vec4(a_Color.r+0.5,a_Color.g,a_Color.b,newAlpha);
+	//else v_Color = vec4(a_Color.rgb,newAlpha);
+	v_Color = newColor;
+
+}
+
+void circleParticle()
+{
+	vec4 centerC = vec4(1,0,0,1);
+	vec4 borderC = vec4(1,1,1,1);
+	
+	vec4 newColor= a_Color;
+
+	vec4 newPosition = vec4(a_Position.x,a_Position.y,a_Position.z,1);
+	float newTime = u_Time - a_sTime;
+	float t = fract(newTime);
+	float period = a_Period;
+	float cycle = period*t * PI;
+	float newAlpha = 1.0;
+
+	if(newTime > 0){
+		
+
+		newPosition.x += sin(a_Value*2*PI) - 0.5*c_G.x*t*t;
+		newPosition.y += cos(a_Value*2*PI) - 0.5*c_G.y*t*t;
+		
+
+		newAlpha = 1 - t/a_LifeTime;
+
+	}
+	else{
+		newPosition.xy = vec2(-100000,0);
+	}
+	
+
+
+	gl_Position = newPosition;
+	//if(newPosition.y < 0.1/t && newPosition.y >-0.1/t) v_Color = vec4(a_Color.r+0.5,a_Color.g,a_Color.b,newAlpha);
+	v_Color = vec4(a_Color.rgb,newAlpha);
+
+	
 }
 
 void main()
 {
 	//raining();
-	sinParticle();
+	//sinParticle();
+	circleParticle();
 }
  
