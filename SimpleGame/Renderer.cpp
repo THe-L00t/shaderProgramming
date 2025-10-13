@@ -23,7 +23,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	CreateVertexBufferObjects();
 
 	//Create Grid Mesh
-	CreateGridMesh(9, 9);
+	CreateGridMesh(50, 50);
 
 
 	//Create Particle
@@ -49,6 +49,7 @@ void Renderer::DeleteAllShaderPrograms()
 	glDeleteShader(m_SolidRectShader);
 	glDeleteShader(m_TestShader);
 	glDeleteShader(m_ParticleShader);
+	glDeleteShader(m_GridMeshShader);
 }
 
 bool Renderer::IsInitialized()
@@ -620,10 +621,13 @@ void Renderer::DrawParticle()
 
 void Renderer::DrawGridMexh()
 {
-
+	m_time += 0.016;
 	//Program select
 	int shader = m_GridMeshShader;
 	glUseProgram(shader);
+
+	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(uTimeLoc, m_time);
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
