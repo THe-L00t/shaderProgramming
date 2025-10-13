@@ -18,6 +18,7 @@ public:
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void DrawTest();
 	void DrawParticle();
+	void DrawGridMexh();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -29,6 +30,7 @@ private:
 	void GeneralParticles(int numParticle);
 	void CompileAllShaderPrograms();
 	void DeleteAllShaderPrograms();
+	void CreateGridMesh(int x, int y);
 
 	bool m_Initialized = false;
 	
@@ -49,5 +51,11 @@ private:
 	GLuint m_ParticleShader = 0;
 	GLuint m_VBOPraticle = 0;
 	GLuint m_VBOPraticleVertexCount = 0;
+
+
+	//Grid
+	GLuint m_GridMeshShader{};
+	GLuint m_GridMeshVBO{};
+	GLuint m_GridMeshVertexCount{};
 };
 
