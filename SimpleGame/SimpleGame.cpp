@@ -24,7 +24,8 @@ void RenderScene(void)
 		g_Renderer->ReloadAllShaderPrograms();
 		G_bNeedReloadShaderPrograms = false;
 	}
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	g_Renderer->DrawFullScreen(0, 0, 0, 0.2);
 	glClearColor(0.0f, 0.f, 0.f, 1.0f);
 
 	// Renderer Test
@@ -32,6 +33,7 @@ void RenderScene(void)
 	//g_Renderer->DrawSolidRect(0, 5, 0, 100, 1, 0.3, 0.3, 1);
 	//g_Renderer->DrawParticle();
 	g_Renderer->DrawGridMexh();
+	//g_Renderer->DrawFullScreen(0, 0, 0, 0.5);
 
 	glutSwapBuffers();
 }
@@ -68,7 +70,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(1000, 1000);
 	glutCreateWindow("Game Software Engineering TUK");
 
 	glewInit();
