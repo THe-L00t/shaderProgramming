@@ -29,6 +29,18 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Create Particle
 	GeneralParticles(100'000);
 
+	for (size_t i = 0; i < 100; i++)
+	{
+		float x = 2 * ((float)rand() / (float)RAND_MAX) - 1;
+		float y = 2 * ((float)rand() / (float)RAND_MAX) - 1;
+		float st = 10 * ((float)rand() / (float)RAND_MAX);
+		float lt = ((float)rand() / (float)RAND_MAX);
+		m_Points[4 * i] = x;
+		m_Points[4 * i +1] = y;
+		m_Points[4 * i +2] = st;
+		m_Points[4 * i +3] = lt;
+	}
+
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
 		m_Initialized = true;
@@ -635,12 +647,18 @@ void Renderer::DrawParticle()
 void Renderer::DrawGridMexh()
 {
 	m_time += 0.016;
+
+	
+
 	//Program select
 	int shader = m_GridMeshShader;
 	glUseProgram(shader);
 
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
+
+	int uPointsLoc = glGetUniformLocation(shader, "u_Points");
+	glUniform4fv(uPointsLoc, 100, m_Points);
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
