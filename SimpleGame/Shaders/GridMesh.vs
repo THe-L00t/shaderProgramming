@@ -1,4 +1,5 @@
 #version 330
+#define MaxPoints 3
 
 in vec3 a_Position;
 
@@ -6,8 +7,10 @@ out vec4 v_Color;
 
 uniform float u_Time;
 
+uniform vec4 u_Points[MaxPoints];
+
 const float PI = 3.141592;
-const vec4 c_Points[3] = vec4[](vec4(0,0,2,2), vec4(0.5,0,3,3), vec4(0.25,-0.5,4,4));
+const vec4 c_Points[MaxPoints] = vec4[](vec4(0,0,2,2), vec4(0.5,0,3,3), vec4(0.25,-0.5,4,4));
 
 void Flag()
 {
@@ -54,17 +57,21 @@ void RainDrop()
 
 	vec2 pos = vec2(a_Position.xy);
 	float newColor = 0;
-	for(int i = 0; i < 3 ;++i)
+	for(int i = 0; i < MaxPoints ;++i)
 	{
 		float newTime = u_Time - c_Points[i].z;
 		if(newTime > 0){
-			float t = newTime;
+			float baseTime = fract(newTime/c_Points[i].w);
+			float oneM = 1- baseTime;
+			float t = baseTime * c_Points[i].w;
+			float range = baseTime * c_Points[i].w / 10;
+
 			vec2 cen = c_Points[i].xy;
 		
 			float d = distance(pos,cen) ;
-			float v = clamp(0.5 - d,0,1);
+			float v = 10*clamp(range - d,0,1);
 
-			newColor += v*sin(d*4*PI*10 - t*3);
+			newColor += oneM*v*sin(d*4*PI*10 - t*3);
 		}
 		
 	}
