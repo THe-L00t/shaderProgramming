@@ -7,7 +7,7 @@ out vec4 v_Color;
 uniform float u_Time;
 
 const float PI = 3.141592;
-const vec4 c_Points[3] = vec4[](vec4(0,0,2,0), vec4(0.5,0,3,0), vec4(0.25,-0.5,4,0));
+const vec4 c_Points[3] = vec4[](vec4(0,0,2,2), vec4(0.5,0,3,3), vec4(0.25,-0.5,4,4));
 
 void Flag()
 {
@@ -56,8 +56,9 @@ void RainDrop()
 	float newColor = 0;
 	for(int i = 0; i < 3 ;++i)
 	{
-		if(u_Time > c_Points[i].z){
-			float t = u_Time - c_Points[i].z;
+		float newTime = u_Time - c_Points[i].z;
+		if(newTime > 0){
+			float t = newTime;
 			vec2 cen = c_Points[i].xy;
 		
 			float d = distance(pos,cen) ;
