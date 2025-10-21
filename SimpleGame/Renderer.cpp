@@ -23,7 +23,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	CreateVertexBufferObjects();
 
 	//Create Grid Mesh
-	CreateGridMesh(50, 50);
+	CreateGridMesh(500, 500);
 
 
 	//Create Particle
@@ -139,10 +139,10 @@ void Renderer::CreateVertexBufferObjects()
 
 void Renderer::CreateGridMesh(int x, int y)
 {
-	float basePosX = -0.5f;
-	float basePosY = -0.5f;
-	float targetPosX = 0.5f;
-	float targetPosY = 0.5f;
+	float basePosX = -1.f;
+	float basePosY = -1.f;
+	float targetPosX = 1.f;
+	float targetPosY = 1.f;
 
 	int pointCountX = x;
 	int pointCountY = y;

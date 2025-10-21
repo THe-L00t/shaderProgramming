@@ -7,6 +7,7 @@ out vec4 v_Color;
 uniform float u_Time;
 
 const float PI = 3.141592;
+const vec2 c_Points[3] = vec2[](vec2(0,0), vec2(0.5,0), vec2(0.25,-0.5));
 
 void Flag()
 {
@@ -36,7 +37,33 @@ void Wave()
 	float d = distance(pos,cen) ;
 	float v = clamp(0.5 - d,0,1);
 
-	float newColor = v*sin(d*4*PI*4 - u_Time*3);
+	float newColor = v*sin(d*4*PI*10 - u_Time*3);
+
+	
+
+	newPosition += vec4(dX,dY,0,0);
+	gl_Position = newPosition;
+
+	v_Color = vec4(newColor);
+}
+void RainDrop()
+{
+	vec4 newPosition = vec4(a_Position,1);
+	float dX = 0;
+	float dY = 0;
+
+	vec2 pos = vec2(a_Position.xy);
+	float newColor = 0;
+	for(int i = 0; i < 3 ;++i)
+	{
+		vec2 cen = c_Points[i];
+		
+		float d = distance(pos,cen) ;
+		float v = clamp(0.5 - d,0,1);
+
+		newColor += v*sin(d*4*PI*10 - u_Time*3);
+	}
+	
 
 	
 
@@ -46,10 +73,9 @@ void Wave()
 	v_Color = vec4(newColor);
 }
 
-
 void main()
 {
-	Wave();
+	RainDrop();
 }
 
 
