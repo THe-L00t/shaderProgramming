@@ -20,6 +20,7 @@ public:
 	void DrawParticle();
 	void DrawGridMexh();
 	void DrawFullScreen(float r, float g, float b, float a);
+	void DrawFS();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -66,5 +67,9 @@ private:
 
 	//for raindrop effect
 	float m_Points[100 * 4];
+
+	//for fragment shader factory
+	GLuint m_VBOFS = 0;
+	GLuint m_FS = 0;
 };
 
