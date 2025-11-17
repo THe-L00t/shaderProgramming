@@ -15,9 +15,12 @@ void main()
 {
     vec2 newUV = v_UV;
     float dx = 0;
-    float dy = sin(v_UV.x * 2 *c_PI);
+    float dy = 0;
     newUV += vec2(dx,dy);
     vec4 newColor = texture(u_RGBTesture, newUV);
+    newColor += texture(u_RGBTesture, vec2(newUV.x-0.02,newUV.y));
+    newColor += texture(u_RGBTesture, vec2(newUV.x-0.04,newUV.y));
+    newColor /=3;
     FragColor = newColor;
 
 }
