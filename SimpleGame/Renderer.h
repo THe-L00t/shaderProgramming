@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-
+#include <cassert>
 #include "Dependencies\glew.h"
 #include "LoadPng.h"
 
@@ -34,6 +34,7 @@ private:
 	void CompileAllShaderPrograms();
 	void DeleteAllShaderPrograms();
 	void CreateGridMesh(int x, int y);
+	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 
 	bool m_Initialized = false;
 
