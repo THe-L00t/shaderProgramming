@@ -73,5 +73,7 @@ private:
 	//for fragment shader factory
 	GLuint m_VBOFS = 0;
 	GLuint m_FS = 0;
+
+	GLuint m_RGBTexture{};
 };
 

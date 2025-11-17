@@ -29,6 +29,9 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Create Particle
 	GeneralParticles(100'000);
 
+	// create texture
+	m_RGBTexture = CreatePngTexture("./rgb.png", GL_NEAREST);
+
 	for (size_t i = 0; i < 100; i++)
 	{
 		float x = 2 * ((float)rand() / (float)RAND_MAX) - 1;
@@ -747,6 +750,10 @@ void Renderer::DrawFS()
 	// 시간 uniform 전달
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
+	int uTextureLoc = glGetUniformLocation(shader, "u_RGBTexture");
+	glUniform1i(uTextureLoc, 0);
+
+	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
