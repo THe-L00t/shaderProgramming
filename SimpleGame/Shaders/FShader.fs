@@ -39,19 +39,43 @@ void Circle(){
 
 void Flag()
 {
-    vec2 newUV = v_UV;
+    vec2 newUV = vec2(v_UV.x,1-v_UV.y-0.5);
     vec4 newColor = vec4(0);
 
     float width = 0.2;
-    float sinValue = sin(v_UV.x*2*c_PI);
+    float sinValue = v_UV.x*0.2*sin(newUV.x*2*c_PI - u_Time);
 
-    if(v_UV.y < sinValue + width){
+    if(newUV.y < sinValue + width && newUV.y > sinValue - width){
         newColor = vec4(1);
     }
+    else 
+    {
+        discard;
+    }
+    FragColor = newColor;
+}
+
+void q1()
+{
+    vec2 newUV = vec2(v_UV.x,v_UV.y);
+    float x = newUV.x;
+    float y = 1-abs(2*(v_UV.y -0.5));
+    vec4 newColor = texture(u_RGBTesture, vec2(x,y));
+
+    FragColor = newColor;
+}
+void q2()
+{
+    vec2 newUV = vec2(v_UV.x,v_UV.y);
+    float x = fract(newUV.x*3);
+    float y = (2-floor(newUV.x*3))/3 + v_UV.y/3;
+    vec4 newColor = texture(u_RGBTesture, vec2(x,y));
+
+    FragColor = newColor;
 }
 
 void main()
 {
-    Flag();
+    q2();
 
 }
