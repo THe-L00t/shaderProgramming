@@ -75,5 +75,17 @@ private:
 	GLuint m_FS = 0;
 
 	GLuint m_RGBTexture{};
+
+	GLuint m_0Texture{};
+	GLuint m_1Texture{};
+	GLuint m_2Texture{};
+	GLuint m_3Texture{};
+	GLuint m_4Texture{};
+	GLuint m_5Texture{};
+	GLuint m_6Texture{};
+	GLuint m_7Texture{};
+	GLuint m_8Texture{};
+	GLuint m_9Texture{};
+	GLuint m_NumTexture{};
 };
 
