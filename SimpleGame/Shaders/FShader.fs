@@ -1,4 +1,4 @@
-#version 330
+ï»¿#version 330
 
 layout(location=0) out vec4 FragColor;
 
@@ -101,47 +101,47 @@ void Brick2()
 
 void AI()
 {
-    // 1. ÃÊ±â UV ¼³Á¤ ¹× ¾Ö´Ï¸ŞÀÌ¼Ç ¿şÀÌºê º¯Çü
+    // 1. ì´ˆê¸° UV ì„¤ì • ë° ì• ë‹ˆë©”ì´ì…˜ ì›¨ì´ë¸Œ ë³€í˜•
     vec2 newUV = v_UV;
     
-    // ½Ã°£°ú UV¿¡ µû¶ó º¯È­ÇÏ´Â µÎ °³ÀÇ »çÀÎÆÄ¸¦ ÀÌ¿ëÇØ UV ÁÂÇ¥¸¦ º¯ÇüÇÕ´Ï´Ù.
-    // ÀÌ´Â ÅØ½ºÃ³°¡ ¹°°áÄ¡µí ÀÏ··ÀÌ´Â È¿°ú¸¦ Áİ´Ï´Ù.
-    // ÁøÆø: 0.05, ÁÖÆÄ¼ö: x, yÃàÀ¸·Î 4¹è
+    // ì‹œê°„ê³¼ UVì— ë”°ë¼ ë³€í™”í•˜ëŠ” ë‘ ê°œì˜ ì‚¬ì¸íŒŒë¥¼ ì´ìš©í•´ UV ì¢Œí‘œë¥¼ ë³€í˜•í•©ë‹ˆë‹¤.
+    // ì´ëŠ” í…ìŠ¤ì²˜ê°€ ë¬¼ê²°ì¹˜ë“¯ ì¼ë ì´ëŠ” íš¨ê³¼ë¥¼ ì¤ë‹ˆë‹¤.
+    // ì§„í­: 0.05, ì£¼íŒŒìˆ˜: x, yì¶•ìœ¼ë¡œ 4ë°°
     float waveX = 0.05 * sin(newUV.y * 4.0 * c_PI + u_Time * 2.0);
     float waveY = 0.05 * cos(newUV.x * 4.0 * c_PI - u_Time * 1.5);
     
     newUV.x += waveX;
     newUV.y += waveY;
     
-    // 2. ÅØ½ºÃ³ »ùÇÃ¸µ ¹× »ö»ó º¸Á¤
-    // º¯ÇüµÈ UV ÁÂÇ¥·Î ÅØ½ºÃ³¸¦ »ùÇÃ¸µÇÕ´Ï´Ù.
+    // 2. í…ìŠ¤ì²˜ ìƒ˜í”Œë§ ë° ìƒ‰ìƒ ë³´ì •
+    // ë³€í˜•ëœ UV ì¢Œí‘œë¡œ í…ìŠ¤ì²˜ë¥¼ ìƒ˜í”Œë§í•©ë‹ˆë‹¤.
     vec4 texColor = texture(u_RGBTesture, newUV);
     
-    // 3. ¸®ÇÃ(Ripple) ÀÌÆåÆ® Ãß°¡ (µ¿½É¿ø)
+    // 3. ë¦¬í”Œ(Ripple) ì´í™íŠ¸ ì¶”ê°€ (ë™ì‹¬ì›)
     vec2 center = vec2(0.5, 0.5);
-    float d = distance(v_UV, center); // ¿øÁ¡°úÀÇ °Å¸® (0.0 ~ 0.707)
+    float d = distance(v_UV, center); // ì›ì ê³¼ì˜ ê±°ë¦¬ (0.0 ~ 0.707)
     
-    // °Å¸®¿¡ µû¶ó »çÀÎÆÄ¸¦ »ı¼ºÇÏ¿© ¸®ÇÃ È¿°ú¸¦ ¸¸µì´Ï´Ù.
-    // ÁÖÆÄ¼ö: 10¹è, ¼Óµµ: 3¹è
+    // ê±°ë¦¬ì— ë”°ë¼ ì‚¬ì¸íŒŒë¥¼ ìƒì„±í•˜ì—¬ ë¦¬í”Œ íš¨ê³¼ë¥¼ ë§Œë“­ë‹ˆë‹¤.
+    // ì£¼íŒŒìˆ˜: 10ë°°, ì†ë„: 3ë°°
     float ripple = sin(d * 10.0 * c_PI - u_Time * 3.0);
     
-    // 4. »ö»ó ½ºÆåÆ®·³(Hue Shift) ¹× °­Á¶
-    // ripple °ªÀ» ±â¹İÀ¸·Î »ö»óÀ» º¯È­½ÃÄÑ È­·ÁÇÔÀ» ´õÇÕ´Ï´Ù.
-    // 0.5¸¦ ´õÇØ À½¼ö °ªÀ» ¾ø¾Ö°í 0~1 ¹üÀ§·Î ¸¸µì´Ï´Ù.
+    // 4. ìƒ‰ìƒ ìŠ¤í™íŠ¸ëŸ¼(Hue Shift) ë° ê°•ì¡°
+    // ripple ê°’ì„ ê¸°ë°˜ìœ¼ë¡œ ìƒ‰ìƒì„ ë³€í™”ì‹œì¼œ í™”ë ¤í•¨ì„ ë”í•©ë‹ˆë‹¤.
+    // 0.5ë¥¼ ë”í•´ ìŒìˆ˜ ê°’ì„ ì—†ì• ê³  0~1 ë²”ìœ„ë¡œ ë§Œë“­ë‹ˆë‹¤.
     float colorShift = ripple * 0.5 + 0.5;
     
-    // R, G, B Ã¤³Î¿¡ ¼­·Î ´Ù¸¥ À§»óÂ÷¸¦ °®´Â ÆÄµ¿À» Àû¿ëÇÏ¿© ¹«Áö°³ ºû È¿°ú¸¦ Áİ´Ï´Ù.
+    // R, G, B ì±„ë„ì— ì„œë¡œ ë‹¤ë¥¸ ìœ„ìƒì°¨ë¥¼ ê°–ëŠ” íŒŒë™ì„ ì ìš©í•˜ì—¬ ë¬´ì§€ê°œ ë¹› íš¨ê³¼ë¥¼ ì¤ë‹ˆë‹¤.
     float r = sin(u_Time * 1.0 + colorShift * c_PI * 2.0) * 0.5 + 0.5;
     float g = sin(u_Time * 1.0 + colorShift * c_PI * 2.0 + 2.0 * c_PI / 3.0) * 0.5 + 0.5;
     float b = sin(u_Time * 1.0 + colorShift * c_PI * 2.0 + 4.0 * c_PI / 3.0) * 0.5 + 0.5;
     
     vec3 spectrum = vec3(r, g, b);
 
-    // 5. ÃÖÁ¾ »ö»ó Á¶ÇÕ
-    // ÅØ½ºÃ³ »ö»ó¿¡ ½ºÆåÆ®·³ »ö»óÀ» °öÇÏ¿©(Modulate) ÅØ½ºÃ³ÀÇ µğÅ×ÀÏÀ» À¯ÁöÇÏ¸é¼­ È­·ÁÇÑ »ö»óÀ» ÀÔÈü´Ï´Ù.
+    // 5. ìµœì¢… ìƒ‰ìƒ ì¡°í•©
+    // í…ìŠ¤ì²˜ ìƒ‰ìƒì— ìŠ¤í™íŠ¸ëŸ¼ ìƒ‰ìƒì„ ê³±í•˜ì—¬(Modulate) í…ìŠ¤ì²˜ì˜ ë””í…Œì¼ì„ ìœ ì§€í•˜ë©´ì„œ í™”ë ¤í•œ ìƒ‰ìƒì„ ì…í™ë‹ˆë‹¤.
     vec4 finalColor = texColor * vec4(spectrum, 1.0);
     
-    // ripple °ªÀÌ °­ÇÑ ºÎºĞ(ÆÄµ¿ÀÇ Á¤Á¡)À» ¹à°Ô °­Á¶ÇÏ¿© ´õ¿í ´ÙÀÌ³ª¹ÍÇÏ°Ô ¸¸µì´Ï´Ù.
+    // ripple ê°’ì´ ê°•í•œ ë¶€ë¶„(íŒŒë™ì˜ ì •ì )ì„ ë°ê²Œ ê°•ì¡°í•˜ì—¬ ë”ìš± ë‹¤ì´ë‚˜ë¯¹í•˜ê²Œ ë§Œë“­ë‹ˆë‹¤.
     finalColor.rgb *= (1.0 + abs(ripple) * 0.5); 
     
     FragColor = finalColor;
@@ -152,47 +152,47 @@ void Glitch_Effect()
     vec2 newUV = v_UV;
     vec2 offsetUV = newUV;
     
-    // 1. ½Ã°£ ±â¹İÀÇ ¹«ÀÛÀ§ ¼ö¿­(Pseudo-Random) »ı¼º
-    // fract(sin(dot(...))) ÆĞÅÏÀ» »ç¿ëÇÏ¿© u_Time¿¡ µû¶ó ºÒ±ÔÄ¢ÇÏ°Ô º¯È­ÇÏ´Â °ª »ı¼º
+    // 1. ì‹œê°„ ê¸°ë°˜ì˜ ë¬´ì‘ìœ„ ìˆ˜ì—´(Pseudo-Random) ìƒì„±
+    // fract(sin(dot(...))) íŒ¨í„´ì„ ì‚¬ìš©í•˜ì—¬ u_Timeì— ë”°ë¼ ë¶ˆê·œì¹™í•˜ê²Œ ë³€í™”í•˜ëŠ” ê°’ ìƒì„±
     float noise = fract(sin(dot(newUV, vec2(12.9898, 78.233))) * 43758.5453 + u_Time * 10.0);
     
-    // 2. ¼öÆò ¿Ö°î (Scanline Distortion)
-    // ³ëÀÌÁî¿Í ½Ã°£, UVÀÇ yÃà À§Ä¡¸¦ ±â¹İÀ¸·Î ¼öÆò ¿Ö°î ¿ÀÇÁ¼ÂÀ» °è»êÇÕ´Ï´Ù.
-    float wave_strength = 0.05 + noise * 0.1; // ³ëÀÌÁî¿¡ µû¶ó ¿Ö°î °­µµ º¯È­
+    // 2. ìˆ˜í‰ ì™œê³¡ (Scanline Distortion)
+    // ë…¸ì´ì¦ˆì™€ ì‹œê°„, UVì˜ yì¶• ìœ„ì¹˜ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ìˆ˜í‰ ì™œê³¡ ì˜¤í”„ì…‹ì„ ê³„ì‚°í•©ë‹ˆë‹¤.
+    float wave_strength = 0.05 + noise * 0.1; // ë…¸ì´ì¦ˆì— ë”°ë¼ ì™œê³¡ ê°•ë„ ë³€í™”
     float wave_offset = sin(newUV.y * 50.0 + u_Time * 20.0 * noise) * wave_strength;
     
-    // ¿Ö°îÀÌ ½ÉÇÒ ¶§´Â ¼öÁ÷À¸·Îµµ Èçµé¸®°Ô ÇÕ´Ï´Ù.
+    // ì™œê³¡ì´ ì‹¬í•  ë•ŒëŠ” ìˆ˜ì§ìœ¼ë¡œë„ í”ë“¤ë¦¬ê²Œ í•©ë‹ˆë‹¤.
     float vertical_shift = step(0.95, noise) * 0.05 * sin(u_Time * 50.0);
     
     offsetUV.x += wave_offset;
     offsetUV.y += vertical_shift;
     
-    // 3. »ö»ó ºĞ¸® (Chromatic Aberration)
-    // °¢ R, G, B Ã¤³ÎÀ» ¼­·Î ´Ù¸¥ ¿ÀÇÁ¼ÂÀ¸·Î »ùÇÃ¸µÇÏ¿© »ö¼öÂ÷ È¿°ú¸¦ ¸¸µì´Ï´Ù.
-    float glitch_factor = 0.005 + noise * 0.01; // ±Û¸®Ä¡ °­µµ¿¡ µû¶ó ºĞ¸® Á¤µµ º¯È­
+    // 3. ìƒ‰ìƒ ë¶„ë¦¬ (Chromatic Aberration)
+    // ê° R, G, B ì±„ë„ì„ ì„œë¡œ ë‹¤ë¥¸ ì˜¤í”„ì…‹ìœ¼ë¡œ ìƒ˜í”Œë§í•˜ì—¬ ìƒ‰ìˆ˜ì°¨ íš¨ê³¼ë¥¼ ë§Œë“­ë‹ˆë‹¤.
+    float glitch_factor = 0.005 + noise * 0.01; // ê¸€ë¦¬ì¹˜ ê°•ë„ì— ë”°ë¼ ë¶„ë¦¬ ì •ë„ ë³€í™”
     
     vec2 redUV   = newUV + vec2(glitch_factor, 0.0) * wave_offset;
-    vec2 greenUV = newUV + vec2(0.0, 0.0); // Green Ã¤³ÎÀº Áß¾Ó
+    vec2 greenUV = newUV + vec2(0.0, 0.0); // Green ì±„ë„ì€ ì¤‘ì•™
     vec2 blueUV  = newUV - vec2(glitch_factor, 0.0) * wave_offset;
     
-    // ÃÖÁ¾ UV´Â R, G, B Ã¤³Î¿¡ °³º°ÀûÀ¸·Î Àû¿ëµË´Ï´Ù.
+    // ìµœì¢… UVëŠ” R, G, B ì±„ë„ì— ê°œë³„ì ìœ¼ë¡œ ì ìš©ë©ë‹ˆë‹¤.
     
-    // 4. ÃÖÁ¾ »ö»ó »ùÇÃ¸µ ¹× Á¶ÇÕ
-    // ¼öÆò ¿Ö°îµÈ UV¿Í »ö»ó ºĞ¸® ¿ÀÇÁ¼ÂÀ» °áÇÕÇÏ¿© »ùÇÃ¸µÇÕ´Ï´Ù.
+    // 4. ìµœì¢… ìƒ‰ìƒ ìƒ˜í”Œë§ ë° ì¡°í•©
+    // ìˆ˜í‰ ì™œê³¡ëœ UVì™€ ìƒ‰ìƒ ë¶„ë¦¬ ì˜¤í”„ì…‹ì„ ê²°í•©í•˜ì—¬ ìƒ˜í”Œë§í•©ë‹ˆë‹¤.
     vec4 color;
     color.r = texture(u_RGBTesture, redUV + vec2(wave_offset, vertical_shift)).r;
     color.g = texture(u_RGBTesture, greenUV + vec2(wave_offset, vertical_shift)).g;
     color.b = texture(u_RGBTesture, blueUV + vec2(wave_offset, vertical_shift)).b;
     color.a = 1.0;
     
-    // 5. ½ºÄµ ¶óÀÎ ºñ³×ÆÃ (Scanline Vignetting)
-    // °¡ÀåÀÚ¸®¸¦ ¾à°£ ¾îµÓ°Ô ÇÏ°í Áß°£Áß°£ ±ôºıÀÌ´Â ¶óÀÎÀ» Ãß°¡ÇÏ¿© TV È­¸é ´À³¦À» ´õÇÕ´Ï´Ù.
+    // 5. ìŠ¤ìº” ë¼ì¸ ë¹„ë„¤íŒ… (Scanline Vignetting)
+    // ê°€ì¥ìë¦¬ë¥¼ ì•½ê°„ ì–´ë‘¡ê²Œ í•˜ê³  ì¤‘ê°„ì¤‘ê°„ ê¹œë¹¡ì´ëŠ” ë¼ì¸ì„ ì¶”ê°€í•˜ì—¬ TV í™”ë©´ ëŠë‚Œì„ ë”í•©ë‹ˆë‹¤.
     float vignette = smoothstep(0.0, 0.5, 1.0 - distance(newUV, vec2(0.5)));
-    color.rgb *= vignette * 0.5 + 0.5; // ºñ³×ÆÃ
+    color.rgb *= vignette * 0.5 + 0.5; // ë¹„ë„¤íŒ…
 
-    // ±ôºıÀÌ´Â ½ºÄµ ¶óÀÎ È¿°ú
+    // ê¹œë¹¡ì´ëŠ” ìŠ¤ìº” ë¼ì¸ íš¨ê³¼
     float scanline = sin(newUV.y * 300.0) * 0.05 + 0.95;
-    color.rgb *= mix(scanline, 1.0, 0.7); // 70%´Â ÀÏ¹İ ¹à±â, 30%´Â ½ºÄµ¶óÀÎ Àû¿ë
+    color.rgb *= mix(scanline, 1.0, 0.7); // 70%ëŠ” ì¼ë°˜ ë°ê¸°, 30%ëŠ” ìŠ¤ìº”ë¼ì¸ ì ìš©
 
     FragColor = color;
 }
@@ -200,12 +200,89 @@ void Glitch_Effect()
 void digit()
 {
     vec2 newUV = v_UV;
-    newUV.x = newUV.x/5 + 0.2;
-    newUV.y = newUV.y/2 + 0.5;
+
+    int digit = int(u_Time)%10;
+    int titleIndex = (digit + 9)%10;
+
+    float offX = ((titleIndex) % 5) * 0.2;
+    float offY = floor(titleIndex/5.f) * 0.5;
+
+    newUV.x = newUV.x*0.2 + offX;
+    newUV.y = newUV.y*0.5 + offY;
     FragColor = texture(u_NumTexture, newUV);
+}
+
+void AI_cnt()
+{
+    vec2 newUV = v_UV; 
+    
+    // 1. ì¹´ìš´í„° ë° ìë¦¿ìˆ˜ ë¶„ë¦¬
+    int counter = int(u_Time) % 100;
+    int ones_digit = counter % 10;
+    int tens_digit = counter / 10; 
+    
+    
+    // 2. ì¶œë ¥ ëª¨ë“œ ê²°ì • ë° í…ìŠ¤ì²˜ ì¸ë±ìŠ¤ ë° ìƒ˜í”Œë§ UV ì„¤ì •
+    
+    int textureIndex;
+    vec2 sampledUV; // ì´ UVëŠ” 0.0 ~ 1.0 ë²”ìœ„ë¡œ ì •ê·œí™”ë  ê²ƒì„
+    
+    
+    if (counter < 10) 
+    {
+        // ğŸ“Œ A. í•œ ìë¦¿ìˆ˜ ëª¨ë“œ (0 ~ 9): í™”ë©´ ì „ì²´ì— í¬ê²Œ ì¶œë ¥
+        
+        // ì˜¤ë¦¬ì§€ë„ ì—­ìˆœí™˜ ì¸ë±ìŠ¤ ë¡œì§ ì‚¬ìš© (u_Time=0 -> Index 9, u_Time=1 -> Index 0)
+        textureIndex = (ones_digit + 9) % 10; 
+        
+        // **ìˆ˜ì •ëœ ë¶€ë¶„:** í™”ë©´ ì „ì²´ UV (newUV)ë¥¼ ê·¸ëŒ€ë¡œ ì‚¬ìš©í•©ë‹ˆë‹¤. 
+        // ì´ UVëŠ” ë‹¤ìŒ ë‹¨ê³„ì—ì„œ í…ìŠ¤ì²˜ ì¹¸ í¬ê¸°ë¡œ ì¶•ì†Œë©ë‹ˆë‹¤.
+        sampledUV = newUV; 
+        
+    } 
+    else 
+    {
+        // ğŸ“Œ B. ë‘ ìë¦¿ìˆ˜ ëª¨ë“œ (10 ~ 99): í™”ë©´ì„ ë°˜ìœ¼ë¡œ ë‚˜ëˆ„ì–´ ì¶œë ¥
+        
+        // 0: ì‹­ì˜ ìë¦¬, 1: ì¼ì˜ ìë¦¬
+        int digit_index = int(floor(newUV.x * 2.0)); 
+        
+        // í˜„ì¬ í”½ì…€ì´ í‘œì‹œí•´ì•¼ í•  ìˆ«ì ê°’
+        int current_digit = (digit_index == 0) ? tens_digit : ones_digit;
+        
+        textureIndex = current_digit;
+        
+        // **ìˆ˜ì •ëœ ë¶€ë¶„:** í˜„ì¬ ìë¦¿ìˆ˜ì˜ í™”ë©´ ì˜ì—­ ë‚´ì—ì„œ UV ì¢Œí‘œë¥¼ 0.0 ~ 1.0ìœ¼ë¡œ ì •ê·œí™”
+        sampledUV.x = fract(newUV.x * 2.0); 
+        sampledUV.y = newUV.y;
+    }
+    
+    
+    // 3. í…ìŠ¤ì²˜ ì˜¤í”„ì…‹ ì •í™•íˆ ê³„ì‚° (5x2 ë°°ì—´ ê°€ì •)
+    
+    float col_index = float(textureIndex % 5); 
+    float offX = col_index * 0.2; 
+    
+    float row_index = floor(float(textureIndex) / 5.0); 
+    float offY = row_index * 0.5;
+    
+    
+    // 4. ìµœì¢… UV ì¢Œí‘œ ì¡°ì • ë° ìƒ˜í”Œë§ (í•µì‹¬: sampledUVë¥¼ í…ìŠ¤ì²˜ ì¹¸ í¬ê¸°ë¡œ ì¶•ì†Œ)
+    
+    vec2 finalUV;
+    
+    // sampledUV (0~1)ë¥¼ í…ìŠ¤ì²˜ í•œ ì¹¸ í¬ê¸°(0.2x0.5)ë¡œ ì¶•ì†Œ í›„, ì˜¤í”„ì…‹ì„ ë”í•¨
+    finalUV.x = sampledUV.x * 0.2 + offX;
+    finalUV.y = sampledUV.y * 0.5 + offY;
+
+    // ë§Œì•½ í•œ ìë¦¿ìˆ˜ ëª¨ë“œì—ì„œ 0~9 ëŒ€ì‹  1~10ì„ ì¹´ìš´íŠ¸í•´ì•¼ í•œë‹¤ë©´, 
+    // ì—¬ê¸°ì„œ (textureIndex == 0)ì¼ ë•Œ discard ë˜ëŠ” íˆ¬ëª… ì²˜ë¦¬ë¥¼ í•´ì•¼ í•˜ì§€ë§Œ, 
+    // ìš”ì²­í•˜ì‹  ëŒ€ë¡œ 0ë¶€í„° ì¹´ìš´íŠ¸í•˜ë¯€ë¡œ ìƒëµí•©ë‹ˆë‹¤.
+    
+    FragColor = texture(u_RGBTesture, finalUV);
 }
 
 void main()
 {
-    digit();
+    AI_cnt();
 }
