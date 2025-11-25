@@ -22,7 +22,9 @@ public:
 	void DrawGridMexh();
 	void DrawFullScreen(float r, float g, float b, float a);
 	void DrawFS();
-	void DrawTexture();
+	void DrawTexture(float x, float y, float sx, float sy, GLuint TexID);
+	void DrawDebugTexture();
+	void DrawFBOs();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -36,6 +38,7 @@ private:
 	void DeleteAllShaderPrograms();
 	void CreateGridMesh(int x, int y);
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
+	void CreateFBOs();
 
 	bool m_Initialized = false;
 
@@ -92,5 +95,19 @@ private:
 	//Texture
 	GLuint m_TexVBO{};
 	GLuint m_TexShader{};
+
+	//FBO Color Buffers
+	GLuint m_RT0{};
+	GLuint m_RT1{};
+	GLuint m_RT2{};
+	GLuint m_RT3{};
+	GLuint m_RT4{};
+
+	//FBOs
+	GLuint m_FBO0{};
+	GLuint m_FBO1{};
+	GLuint m_FBO2{};
+	GLuint m_FBO3{};
+	GLuint m_FBO4{};
 };
 

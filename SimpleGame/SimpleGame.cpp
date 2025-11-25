@@ -26,7 +26,7 @@ void RenderScene(void)
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//g_Renderer->DrawFullScreen(0, 0, 0, 0.2);
-	glClearColor(1.0f, 0.f, 0.f, 1.0f);
+	glClearColor(0.f, 1.f, 0.f, 1.0f);
 
 	// Renderer Test
 	//g_Renderer->DrawTest();
@@ -35,7 +35,8 @@ void RenderScene(void)
 	//g_Renderer->DrawGridMexh();
 	//g_Renderer->DrawFullScreen(0, 0, 0, 0.5);
 	//g_Renderer->DrawFS();
-	g_Renderer->DrawTexture();
+	g_Renderer->DrawFBOs();
+	g_Renderer->DrawDebugTexture();
 
 	glutSwapBuffers();
 }
@@ -68,11 +69,14 @@ void SpecialKeyInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	int winX = 512;
+	int winY = 512;
+
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(1000, 1000);
+	glutInitWindowSize(winX, winY);
 	glutCreateWindow("Game Software Engineering TUK");
 
 	glewInit();
