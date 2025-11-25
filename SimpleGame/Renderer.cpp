@@ -41,7 +41,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_6Texture = CreatePngTexture("./texture/6.png", GL_NEAREST);
 	m_7Texture = CreatePngTexture("./texture/7.png", GL_NEAREST);
 	m_8Texture = CreatePngTexture("./texture/8.png", GL_NEAREST);
-	m_9Texture = CreatePngTexture("./texture/9.png", GL_NEAREST);
+	//m_9Texture = CreatePngTexture("./texture/9.png", GL_NEAREST);
 	m_NumTexture = CreatePngTexture("./texture/numbers.png", GL_NEAREST);
 
 	for (size_t i = 0; i < 100; i++)
@@ -71,6 +71,7 @@ void Renderer::CompileAllShaderPrograms()
 	m_GridMeshShader = CompileShaders("./Shaders/GridMesh.vs", "./Shaders/GridMesh.fs");
 	m_FullScreenShader = CompileShaders("./Shaders/FullScreen.vs", "./Shaders/FullScreen.fs");
 	m_FS = CompileShaders("./Shaders/FShader.vs", "./Shaders/FShader.fs");
+	m_TexShader = CompileShaders("./Shaders/texture.vs", "./Shaders/texture.fs");
 }
 
 void Renderer::DeleteAllShaderPrograms()
@@ -175,6 +176,22 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_VBOFS);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rectFS), rectFS, GL_STATIC_DRAW);
+
+	float texRect[]
+		=
+	{
+		-1.f , -1.f , 0.f,	0.f,1.f,
+		-1.f , 1.f, 0.f,	0.f,0.f,
+		1.f , 1.f , 0.f,	 1.f,0.f,//Triangle1
+
+		-1.f , -1.f , 0.f,	0.f,1.f,
+		1.f , 1.f, 0.f,		1.f,0.f,
+		1.f , -1.f , 0.f,	1.f,1.f//Triangle2
+	};
+
+	glGenBuffers(1, &m_TexVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_TexVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texRect), texRect, GL_STATIC_DRAW);
 }
 
 void Renderer::CreateGridMesh(int x, int y)
@@ -806,4 +823,33 @@ void Renderer::DrawFS()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_BLEND);
+}
+
+void Renderer::DrawTexture()
+{
+
+	//Program select
+	int shader = m_TexShader;
+	glUseProgram(shader);
+
+	int uTex = glGetUniformLocation(shader, "u_TexID");
+	glUniform1i(uTex, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_RGBTexture);
+
+	int attribPosition = glGetAttribLocation(shader, "a_Position");
+	int aTex = glGetAttribLocation(shader, "a_Tex");
+	glEnableVertexAttribArray(attribPosition);
+	glEnableVertexAttribArray(aTex);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_TexVBO);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glVertexAttribPointer(aTex, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float)*3));
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
