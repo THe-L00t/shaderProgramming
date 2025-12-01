@@ -1,6 +1,7 @@
 ﻿#version 330
 
 layout(location=0) out vec4 FragColor;
+layout(location=1) out vec4 FragColor1;
 
 in vec2 v_UV;
 
@@ -13,7 +14,7 @@ in vec2 vTexPos;
 
 const float c_PI = 3.141592;
 
-void test()
+vec4 test()
 {
 	vec2 newUV = v_UV;
     float dx = 0.1 * sin(newUV.y *2*c_PI - u_Time);
@@ -23,11 +24,11 @@ void test()
     newColor += texture(u_RGBTesture, vec2(newUV.x-0.02,newUV.y));
     newColor += texture(u_RGBTesture, vec2(newUV.x-0.04,newUV.y));
     newColor /=3;
-    FragColor = newColor;
+    return newColor;
 
 }
 
-void Circle(){
+vec4 Circle(){
 	vec2 newUV = v_UV;//0~1
 	vec2 center = vec2(0.5,0.5);
 	float d = distance(newUV, center);
@@ -36,10 +37,10 @@ void Circle(){
     float value = sin(d*4*c_PI- u_Time);
     newColor = vec4(value);
 
-	FragColor = newColor;
+	return newColor;
 }
 
-void Flag()
+vec4 Flag()
 {
     vec2 newUV = vec2(v_UV.x,1-v_UV.y-0.5);
     vec4 newColor = vec4(0);
@@ -54,29 +55,29 @@ void Flag()
     {
         discard;
     }
-    FragColor = newColor;
+    return newColor;
 }
 
-void q1()
+vec4 q1()
 {
     vec2 newUV = vec2(v_UV.x,v_UV.y);
     float x = newUV.x;
     float y = 1-abs(2*(v_UV.y -0.5));
     vec4 newColor = texture(u_RGBTesture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
-void q2()
+vec4 q2()
 {
     vec2 newUV = vec2(v_UV.x,v_UV.y);
     float x = fract(newUV.x*3);
     float y = (2-floor(newUV.x*3))/3 + v_UV.y/3;
     vec4 newColor = texture(u_RGBTesture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Brick1()
+vec4 Brick1()
 {
     vec2 newUV = vec2(v_UV.x,v_UV.y);
     float rCount = 3;
@@ -86,20 +87,20 @@ void Brick1()
     float y = fract(newUV.y*rCount);
     vec4 newColor = texture(u_RGBTesture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void Brick2()
+vec4 Brick2()
 {
     vec2 newUV = vec2(v_UV.x,v_UV.y);
     float x = fract(newUV.x*2);
     float y = fract(newUV.y*2)+floor(newUV.x*2)*0.5;
     vec4 newColor = texture(u_RGBTesture, vec2(x,y));
 
-    FragColor = newColor;
+    return newColor;
 }
 
-void AI()
+vec4 AI()
 {
     // 1. 초기 UV 설정 및 애니메이션 웨이브 변형
     vec2 newUV = v_UV;
@@ -144,10 +145,10 @@ void AI()
     // ripple 값이 강한 부분(파동의 정점)을 밝게 강조하여 더욱 다이나믹하게 만듭니다.
     finalColor.rgb *= (1.0 + abs(ripple) * 0.5); 
     
-    FragColor = finalColor;
+    return finalColor;
 }
 
-void Glitch_Effect()
+vec4 Glitch_Effect()
 {
     vec2 newUV = v_UV;
     vec2 offsetUV = newUV;
@@ -194,10 +195,10 @@ void Glitch_Effect()
     float scanline = sin(newUV.y * 300.0) * 0.05 + 0.95;
     color.rgb *= mix(scanline, 1.0, 0.7); // 70%는 일반 밝기, 30%는 스캔라인 적용
 
-    FragColor = color;
+    return color;
 }
 
-void digit()
+vec4 digit()
 {
     vec2 newUV = v_UV;
 
@@ -209,10 +210,10 @@ void digit()
 
     newUV.x = newUV.x*0.2 + offX;
     newUV.y = newUV.y*0.5 + offY;
-    FragColor = texture(u_NumTexture, newUV);
+    return texture(u_NumTexture, newUV);
 }
 
-void AI_cnt()
+vec4 AI_cnt()
 {
     vec2 newUV = v_UV; 
     
@@ -279,10 +280,74 @@ void AI_cnt()
     // 여기서 (textureIndex == 0)일 때 discard 또는 투명 처리를 해야 하지만, 
     // 요청하신 대로 0부터 카운트하므로 생략합니다.
     
-    FragColor = texture(u_RGBTesture, finalUV);
+    return texture(u_RGBTesture, finalUV);
+}
+
+vec4 WaterDroplets()
+{
+    vec2 uv = v_UV;
+
+    //------------------------------------------------
+    // 1. 물방울 위치를 결정할 노이즈 패턴
+    //------------------------------------------------
+    float noise = fract(sin(dot(uv * 10.0, vec2(12.9898, 78.233)))*43758.5453);
+
+    // 여러 층의 노이즈(Fractal Noise) → 더 자연스러운 분포
+    float noise2 = fract(sin(dot(uv * 25.0 + u_Time, vec2(24.123, 92.654)))*12345.6789);
+    float blob = smoothstep(0.85, 1.0, noise * 0.6 + noise2 * 0.5);
+
+    // blob = 0~1 (물방울일 확률이 높은 부분: 0.85 이상)
+    if(blob < 0.1)
+        blob = 0.0;
+
+    //------------------------------------------------
+    // 2. 물방울의 두께(Height map)
+    //------------------------------------------------
+    float dropHeight = blob * 0.03;          // 두께값
+    float refractStrength = dropHeight * 0.4; // 굴절량
+
+    //------------------------------------------------
+    // 3. 유리창 위로 떨어지는 효과 (sliding)
+    //------------------------------------------------
+    uv.y += dropHeight * (sin(u_Time*0.5) * 0.02 + 0.02); 
+    uv.y += (blob * 0.1) * u_Time * 0.02; // gravity-like slide
+
+    //------------------------------------------------
+    // 4. 배경 굴절
+    //------------------------------------------------
+    vec2 refractUV = v_UV + vec2(
+        (noise - 0.5) * refractStrength,
+        (noise2 - 0.5) * refractStrength
+    );
+
+    vec4 bg = texture(u_RGBTesture, refractUV);
+
+    //------------------------------------------------
+    // 5. 물방울 하이라이트 (Specular)
+    //------------------------------------------------
+    float highlight = pow(max(0.0, dropHeight), 4.0);
+    vec3 spec = vec3(0.9, 0.92, 1.0) * highlight * 4.0;
+
+    //------------------------------------------------
+    // 6. 물방울 자체의 밝기
+    //------------------------------------------------
+    vec3 tint = vec3(0.8, 0.85, 0.9);
+    vec3 dropColor = bg.rgb * tint + spec;
+
+    // 물방울이 없는 지점 → 그냥 배경 사용
+    return vec4(mix(bg.rgb, dropColor, blob), 1.0);
+}
+
+vec4 Pixelization(){
+    int resolution = 100;                                                                   
+    float tx = floor(v_Tex.x*resolution)/resolution;
+    float ty = floor(v_Tex.y*resolution)/resolution;
+
+    reutrn texture(u_TexID, vec2(tx,ty));
 }
 
 void main()
 {
-    AI_cnt();
+    FragColor = WaterDroplets();
+    FragColor1 = Circle();
 }

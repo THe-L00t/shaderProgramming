@@ -347,6 +347,7 @@ void Renderer::CreateFBOs()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_RT0, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_RT1, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 	//check!
@@ -841,6 +842,9 @@ void Renderer::DrawFS()
 	int shader = m_FS;
 	glUseProgram(shader);
 
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers);
+
 	// 시간 uniform 전달
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
@@ -936,12 +940,16 @@ void Renderer::DrawDebugTexture()
 void Renderer::DrawFBOs()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
+	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawParticle();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO1);
+	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawGridMexh();
 
+
+	glViewport(0, 0, 512, 512);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
