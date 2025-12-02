@@ -91,6 +91,7 @@ private:
 	GLuint m_8Texture{};
 	GLuint m_9Texture{};
 	GLuint m_NumTexture{};
+	GLuint m_ParticleTexture{};
 
 	//Texture
 	GLuint m_TexVBO{};
@@ -102,6 +103,8 @@ private:
 	GLuint m_RT2{};
 	GLuint m_RT3{};
 	GLuint m_RT4{};
+	GLuint m_HDRRT0_0{};	//float texture
+	GLuint m_HDRRT0_1{};
 
 	//FBOs
 	GLuint m_FBO0{};
@@ -109,5 +112,7 @@ private:
 	GLuint m_FBO2{};
 	GLuint m_FBO3{};
 	GLuint m_FBO4{};
+	GLuint m_HDRFBO0{};
+	GLuint m_HDRFBO1{};
 };
 

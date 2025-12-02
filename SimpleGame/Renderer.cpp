@@ -43,6 +43,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_8Texture = CreatePngTexture("./texture/8.png", GL_NEAREST);
 	//m_9Texture = CreatePngTexture("./texture/9.png", GL_NEAREST);
 	m_NumTexture = CreatePngTexture("./texture/numbers.png", GL_NEAREST);
+	m_ParticleTexture = CreatePngTexture("./texture/particle.png", GL_NEAREST);
 
 	CreateFBOs();
 
@@ -384,6 +385,38 @@ void Renderer::CreateFBOs()
 		assert(0);
 	}
 
+
+	glGenTextures(1, &m_HDRRT0_0);
+	glBindTexture(GL_TEXTURE_2D, m_HDRRT0_0);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	glGenTextures(1, &m_HDRRT0_1);
+	glBindTexture(GL_TEXTURE_2D, m_HDRRT0_1);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	
+	glGenRenderbuffers(1, &depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 512, 512);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+
+	glGenFramebuffers(1, &m_HDRFBO0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_HDRRT0_0, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_HDRRT0_1, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -537,8 +570,8 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 
 void Renderer::GeneralParticles(int numParticle)
 {
-	int floatCountPerVertex = 3 + 1 + 4 + 1 + 3 + 1 + 1 + 1;	
-	//x, y, z, value, r, g, b, a, sTime, vx, vy, vz, l, mass, period
+	int floatCountPerVertex = 3 + 1 + 4 + 1 + 3 + 1 + 1 + 1 + 2;	
+	//x, y, z, value, r, g, b, a, sTime, vx, vy, vz, l, mass, period, tx,ty
 	int verticesCountPerParticle = 6;
 	int floatCountPerParticle = floatCountPerVertex * verticesCountPerParticle;
 
@@ -588,6 +621,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = l; index++;
 		vertices[index] = mass; index++;
 		vertices[index] = period; index++;
+		vertices[index] = 0; index++;
+		vertices[index] = 1; index++;
 
 		vertices[index] = x + size; index++;	//v2
 		vertices[index] = y + size; index++;
@@ -604,6 +639,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = l; index++;
 		vertices[index] = mass; index++;
 		vertices[index] = period; index++;
+		vertices[index] = 1; index++;
+		vertices[index] = 0; index++;
 
 		vertices[index] = x - size; index++;	//v3
 		vertices[index] = y + size; index++;
@@ -620,6 +657,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = l; index++;
 		vertices[index] = mass; index++;
 		vertices[index] = period; index++;
+		vertices[index] = 0; index++;
+		vertices[index] = 0; index++;
 
 		vertices[index] = x - size; index++;	//v4
 		vertices[index] = y - size; index++;
@@ -636,6 +675,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = l; index++;
 		vertices[index] = mass; index++;
 		vertices[index] = period; index++;
+		vertices[index] = 0; index++;
+		vertices[index] = 1; index++;
 
 		vertices[index] = x + size; index++;	//v5
 		vertices[index] = y - size; index++;
@@ -652,6 +693,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = l; index++;
 		vertices[index] = mass; index++;
 		vertices[index] = period; index++;
+		vertices[index] = 1; index++;
+		vertices[index] = 1; index++;
 
 		vertices[index] = x + size; index++;	//v6
 		vertices[index] = y + size; index++;
@@ -668,6 +711,8 @@ void Renderer::GeneralParticles(int numParticle)
 		vertices[index] = l; index++;
 		vertices[index] = mass; index++;
 		vertices[index] = period; index++;
+		vertices[index] = 1; index++;
+		vertices[index] = 0; index++;
 	}
 
 	glGenBuffers(1, &m_VBOPraticle);
@@ -727,10 +772,17 @@ void Renderer::DrawParticle()
 	GLuint shader = m_ParticleShader;
 	glUseProgram(shader);
 
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers);
+
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
 	int uForceLoc = glGetUniformLocation(shader, "u_Force");
 	glUniform3f(uForceLoc, 3,0,0);
+	int uTexLoc = glGetUniformLocation(shader, "u_Texture");
+	glUniform1i(uTexLoc, 0);
+	glActiveTexture(GL_TEXTURE);
+	glBindTexture(GL_TEXTURE_2D, m_ParticleTexture);
 
 
 	int attribPosition = glGetAttribLocation(shader, "a_Position");
@@ -741,8 +793,9 @@ void Renderer::DrawParticle()
 	int attribLife = glGetAttribLocation(shader, "a_LifeTime");
 	int attribMass = glGetAttribLocation(shader, "a_Mass");
 	int attribPeriod = glGetAttribLocation(shader, "a_Period");
+	int attribTex = glGetAttribLocation(shader, "a_Tex");
 
-	int stride = 15;
+	int stride = 17;
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOPraticle);
 
 	glEnableVertexAttribArray(attribPosition);
@@ -769,6 +822,9 @@ void Renderer::DrawParticle()
 
 	glEnableVertexAttribArray(attribPeriod);
 	glVertexAttribPointer(attribPeriod, 1, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 14));
+
+	glEnableVertexAttribArray(attribTex);
+	glVertexAttribPointer(attribTex, 2, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (GLvoid*)(sizeof(float) * 15));
 
 	glDrawArrays(GL_TRIANGLES, 0, m_VBOPraticleVertexCount);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -933,13 +989,13 @@ void Renderer::DrawTexture(float x, float y, float sx, float sy, GLuint TexID)
 
 void Renderer::DrawDebugTexture()
 {
-	DrawTexture(-0.6, -0.6, 0.4, 0.4, m_RT0);
-	DrawTexture(0, 0.6, 0.4, 0.4, m_RT1);
+	DrawTexture(-0.5, -0.5, 0.5, 0.5, m_HDRRT0_0);
+	DrawTexture(0, 0, 0.5, 0.5, m_HDRRT0_1);
 }
 
 void Renderer::DrawFBOs()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
+	/*glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
 	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawParticle();
@@ -947,7 +1003,12 @@ void Renderer::DrawFBOs()
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO1);
 	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawGridMexh();
+	DrawGridMexh();*/
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_HDRFBO0);
+	glViewport(0, 0, 512, 512);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	DrawParticle();
 
 
 	glViewport(0, 0, 512, 512);

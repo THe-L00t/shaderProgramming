@@ -338,13 +338,15 @@ vec4 WaterDroplets()
     return vec4(mix(bg.rgb, dropColor, blob), 1.0);
 }
 
-vec4 Pixelization(){
-    int resolution = 100;                                                                   
-    float tx = floor(v_Tex.x*resolution)/resolution;
-    float ty = floor(v_Tex.y*resolution)/resolution;
+//vec4 Pixelization(){
+    //int resolution = 100;                                                                   
+   // float tx = floor(v_Tex.x*resolution)/resolution;
+    //float ty = floor(v_Tex.y*resolution)/resolution;
 
-    reutrn texture(u_TexID, vec2(tx,ty));
-}
+    //reutrn texture(u_TexID, vec2(tx,ty));
+//}
+
+
 
 void main()
 {

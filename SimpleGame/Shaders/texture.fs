@@ -1,13 +1,25 @@
 #version 330
 
 layout(location=0) out vec4 FragColor;
+layout(location=1) out vec4 FragColorHigh;
 
-uniform sampler2D u_TexID;
+uniform sampler2D u_Texture;
 
-in vec2 v_Tex;
+in vec4 v_Color;
+in vec2 v_UV;
+
+void Textured()
+{
+	vec4 result = texture(u_Texture, v_UV)*v_Color;
+	float brightness = dot(result.rgb, vec3(0.2126, 0.7152, 0.0722));
+	FragColor = result;
+	if(brightness > 1.0)
+		FragColorHigh = result;
+	else
+		FragColorHigh = vec4(0);
+}
 
 void main()
 {
-	FragColor = texture(u_TexID, v_Tex);
-
+	Textured();
 }

@@ -34,9 +34,9 @@ void RenderScene(void)
 	//g_Renderer->DrawParticle();
 	//g_Renderer->DrawGridMexh();
 	//g_Renderer->DrawFullScreen(0, 0, 0, 0.5);
-	g_Renderer->DrawFS();
-	//g_Renderer->DrawFBOs();
-	//g_Renderer->DrawDebugTexture();
+	//g_Renderer->DrawFS();
+	g_Renderer->DrawFBOs();
+	g_Renderer->DrawDebugTexture();
 
 	glutSwapBuffers();
 }
